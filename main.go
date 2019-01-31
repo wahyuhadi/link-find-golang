@@ -28,6 +28,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	for _, link := range links {
 		fmt.Fprintf(w, "[+] Link Found = %q\n", link)
 	}
+
+	linksJs := pageJs(nil, page)
+	for _, link := range linksJs {
+		fmt.Fprintf(w, "[+] Js Found = %q\n", link)
+	}
 }
 
 func parse(url string) (*html.Node, error) {
@@ -53,6 +58,20 @@ func pageLinks(links []string, n *html.Node) []string {
 	}
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
 		links = pageLinks(links, c)
+	}
+	return links
+}
+
+func pageJs(links []string, n *html.Node) []string {
+	if n.Type == html.ElementNode && n.Data == "script" {
+		for _, a := range n.Attr {
+			if a.Key == "src" {
+				links = append(links, a.Val)
+			}
+		}
+	}
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		links = pageJs(links, c)
 	}
 	return links
 }
