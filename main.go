@@ -10,12 +10,12 @@ import (
 
 func main() {
 	http.HandleFunc("/", handler)
-	log.Fatal(http.ListenAndServe("0.0.0.0:8000", nil))
+	log.Fatal(http.ListenAndServe("0.0.0.0:8080", nil))
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	url := r.URL.Query().Get("q")
-	fmt.Fprintf(w, "[+] Page = %q\n", url)
+	fmt.Fprintf(w, "[+] Page = %q\n==============================================\n\n", url)
 	if len(url) == 0 {
 		return
 	}
@@ -30,8 +30,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	linksJs := pageJs(nil, page)
-	for _, link := range linksJs {
-		fmt.Fprintf(w, "[+] Js Found = %q\n", link)
+	for _, js := range linksJs {
+		fmt.Fprintf(w, "[+] Js Found = %q\n", js)
 	}
 }
 
